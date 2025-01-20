@@ -70,7 +70,7 @@ function curve_no_animation() {
 
 curve_no_animation();
 const totalLines = 60;
-let colors = generateColor("#de1d1d", "#524A83", 60);
+let colors = generateColor("#de1d1d", "#5411c7", 60);
 let prev = 0;
 var currentAngle = -240;
 function curve_animation(n) {
