@@ -1,154 +1,132 @@
-// deno-lint-ignore-file no-unused-vars no-inner-declarations no-var
+let usr_inp = "";
+let isDarkTheme = false;
 
-var usr_inp = "";
+const buttons = {
+	clear: document.getElementById("buttonClear"),
+	signChange: document.getElementById("buttonSignchanged"),
+	percentage: document.getElementById("buttonPercentage"),
+	division: document.getElementById("buttonDevisition"),
+	multiply: document.getElementById("buttonMultiplication"),
+	subtract: document.getElementById("buttonSubtraction"),
+	add: document.getElementById("buttonplus"),
+	equal: document.getElementById("buttonEqual"),
+	decimal: document.getElementById("buttonDecimal"),
+	remove: document.getElementById("buttonremove"),
+};
 
-const btn1 = document.getElementById("button1");
-const btn2 = document.getElementById("button2");
-const btn3 = document.getElementById("button3");
-const btn4 = document.getElementById("button4");
-const btn5 = document.getElementById("button5");
-const btn6 = document.getElementById("button6");
-const btn7 = document.getElementById("button7");
-const btn8 = document.getElementById("button8");
-const btn9 = document.getElementById("button9");
-const btn0 = document.getElementById("button0");
-const btnrem = document.getElementById("buttonremove");
-const btnclear = document.getElementById("buttonClear");
-const btnsignchange = document.getElementById("buttonSignchanged");
-const btnpercentage = document.getElementById("buttonPercentage");
-
-const btnDivision = document.getElementById("buttonDevisition");
-const btnMulti = document.getElementById("buttonMultiplication");
-const btnSub = document.getElementById("buttonSubtraction");
-const btnplus = document.getElementById("buttonplus");
-const btneql = document.getElementById("buttonEqual");
 const ques = document.getElementById("question");
 const answer_label = document.getElementById("answer_label");
-const btnDeci = document.getElementById("buttonDecimal");
-btnclear.onclick = () => {
-	usr_inp = "";
-	ques.textContent = "";
-	answer_label.textContent = usr_inp;
-};
-btnsignchange.onclick = () => {
-	usr_inp = change_sign(usr_inp.toString());
-	answer_label.textContent = usr_inp;
-};
-btnpercentage.onclick = () => {
-	ques.textContent = usr_inp;
-	usr_inp = percentage(usr_inp.toString());
-	if (usr_inp % 1 !== 0) {
-		const formattedResult = usr_inp.toFixed(4);
-		answer_label.textContent = formattedResult.toString();
-		console.log(formattedResult);
+const equal_label = document.getElementById("equal_label");
+const theme = document.getElementById("thememode");
+const theme_icon = document.getElementById("lightmode_icon");
+
+theme.addEventListener("click", () => {
+	isDarkTheme = !isDarkTheme;
+	console.log(isDarkTheme);
+	const root = document.documentElement;
+
+	if (isDarkTheme) {
+		theme_icon.setAttribute("src", "../icons/darkmode.svg");
+		root.style.setProperty("--background", "var(--background-dark)");
+		root.style.setProperty("--background-alt", "var(--background-alt-dark)");
+		root.style.setProperty("--text-color", "var(--text-dark)");
+		root.style.setProperty("--button-bg", "var(--button-bg-dark)");
+		root.style.setProperty("--button-hover-bg", "var(--button-hover-bg-dark)");
+		root.style.color = "white";
 	} else {
-		answer_label.textContent = usr_inp.toString();
+		theme_icon.setAttribute("src", "../icons/lightmode.svg");
+		root.style.setProperty("--background", "var(--background-light)");
+		root.style.setProperty("--background-alt", "var(--background-alt-light)");
+		root.style.setProperty("--text-color", "var(--text-light)");
+		root.style.setProperty("--button-bg", "var(--button-bg-light)");
+		root.style.setProperty("--button-hover-bg", "var(--button-hover-bg-light)");
 	}
+});
+
+const digitButtons = Array.from(
+	{ length: 10 },
+	(_, i) => document.getElementById(`button${i}`),
+);
+
+const updateDisplay = (content) => {
+	answer_label.textContent = content;
 };
-btnDivision.onclick = () => {
-	usr_inp += "/";
-	answer_label.textContent = usr_inp;
-};
-btnMulti.onclick = () => {
-	usr_inp += "*";
-	answer_label.textContent = usr_inp;
-};
-btnSub.onclick = () => {
-	usr_inp += "-";
-	answer_label.textContent = usr_inp;
-};
-btnplus.onclick = () => {
-	usr_inp += "+";
-	answer_label.textContent = usr_inp;
-};
-btneql.onclick = () => {
-	ques.textContent = usr_inp;
+
+const evaluateExpression = () => {
 	try {
-		usr_inp = eval(usr_inp);
-		if (usr_inp === Infinity || usr_inp === -Infinity) {
-			answer_label.textContent = "Division by zero!";
+		usr_inp = usr_inp
+			.replace(buttons.multiply.textContent.trim(), "*")
+			.replace(buttons.division.textContent.trim(), "/");
+		let result = eval(usr_inp);
+		if (result === Infinity || result === -Infinity) {
+			updateDisplay("Division by zero!");
 		} else {
-			if (usr_inp % 1 !== 0) {
-				const formattedResult = usr_inp.toFixed(4);
-				answer_label.textContent = formattedResult.toString();
-				console.log(formattedResult);
-			} else {
-				answer_label.textContent = usr_inp.toString();
-			}
+			updateDisplay(result % 1 !== 0 ? result.toFixed(4) : result.toString());
 		}
 	} catch (error) {
-		answer_label.textContent = "Error: " + error.message; // More informative error message
+		updateDisplay("Error: Invalid input");
 		console.error("Calculation error:", error);
 	}
 };
 
-btn1.onclick = () => {
-	usr_inp += "1";
-	answer_label.textContent = usr_inp;
+const changeSign = (str) => (str.startsWith("-") ? str.slice(1) : `-${str}`);
+
+const calculatePercentage = (str) => {
+	try {
+		let value = eval(str);
+		return str.includes("/") ? value * 100 : value / 100;
+	} catch {
+		return "Error";
+	}
 };
 
-btn2.onclick = () => {
-	usr_inp += "2";
-	answer_label.textContent = usr_inp;
+buttons.clear.onclick = () => {
+	usr_inp = "";
+	ques.textContent = "";
+	equal_label.textContent = "";
+	updateDisplay(usr_inp);
 };
-btn3.onclick = () => {
-	usr_inp += "3";
-	answer_label.textContent = usr_inp;
+
+buttons.signChange.onclick = () => {
+	usr_inp = changeSign(usr_inp);
+	updateDisplay(usr_inp);
 };
-btn4.onclick = () => {
-	usr_inp += "4";
-	answer_label.textContent = usr_inp;
+
+buttons.percentage.onclick = () => {
+	ques.textContent = usr_inp;
+	equal_label.textContent = "=";
+	usr_inp = calculatePercentage(usr_inp);
+	updateDisplay(usr_inp);
 };
-btn5.onclick = () => {
-	usr_inp += "5";
-	answer_label.textContent = usr_inp;
+
+buttons.division.onclick =
+	buttons.multiply.onclick =
+	buttons.subtract.onclick =
+	buttons.add.onclick =
+	(event) => {
+		usr_inp += event.target.textContent.trim();
+		updateDisplay(usr_inp);
+	};
+
+buttons.equal.onclick = () => {
+	ques.textContent = usr_inp;
+	equal_label.textContent = "=";
+	evaluateExpression();
 };
-btn6.onclick = () => {
-	usr_inp += "6";
-	answer_label.textContent = usr_inp;
-};
-btn7.onclick = () => {
-	usr_inp += "7";
-	answer_label.textContent = usr_inp;
-};
-btn8.onclick = () => {
-	usr_inp += "8";
-	answer_label.textContent = usr_inp;
-};
-btn9.onclick = () => {
-	usr_inp += "9";
-	answer_label.textContent = usr_inp;
-};
-btnDeci.onclick = () => {
+
+buttons.decimal.onclick = () => {
 	usr_inp += ".";
-	answer_label.textContent = usr_inp;
+	updateDisplay(usr_inp);
 };
-btn0.onclick = () => {
-	usr_inp += "0";
-	answer_label.textContent = usr_inp;
-};
-btnrem.onclick = () => {
+
+buttons.remove.onclick = () => {
 	usr_inp = usr_inp.slice(0, -1);
-	console.log(usr_inp);
-	answer_label.textContent = usr_inp;
+	updateDisplay(usr_inp);
 };
 
-function change_sign(str = "") {
-	if (str.startsWith("-")) {
-		return str.substring(1);
-	} else {
-		return "-" + str;
-	}
-}
-
-function percentage(str = "") {
-	let value = null;
-	if (str.includes("/")) {
-		str = eval(str);
-		value = parseFloat(str) * 100;
-		return value;
-	}
-	str = eval(str);
-	value = parseFloat(str) / 100;
-	return value;
-}
+digitButtons.forEach((button, index) => {
+	button.onclick = () => {
+		usr_inp += index.toString();
+		updateDisplay(usr_inp);
+	};
+});
