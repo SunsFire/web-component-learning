@@ -22,7 +22,6 @@ const theme_icon = document.getElementById("lightmode_icon");
 
 theme.addEventListener("click", () => {
 	isDarkTheme = !isDarkTheme;
-	console.log(isDarkTheme);
 	const root = document.documentElement;
 
 	if (isDarkTheme) {
@@ -43,9 +42,8 @@ theme.addEventListener("click", () => {
 	}
 });
 
-const digitButtons = Array.from(
-	{ length: 10 },
-	(_, i) => document.getElementById(`button${i}`),
+const digitButtons = Array.from({ length: 10 }, (_, i) =>
+	document.getElementById(`button${i}`),
 );
 
 const updateDisplay = (content) => {
@@ -103,10 +101,10 @@ buttons.division.onclick =
 	buttons.multiply.onclick =
 	buttons.subtract.onclick =
 	buttons.add.onclick =
-	(event) => {
-		usr_inp += event.target.textContent.trim();
-		updateDisplay(usr_inp);
-	};
+		(event) => {
+			usr_inp += event.target.textContent.trim();
+			updateDisplay(usr_inp);
+		};
 
 buttons.equal.onclick = () => {
 	ques.textContent = usr_inp;
