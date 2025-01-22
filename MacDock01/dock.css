@@ -23,7 +23,7 @@ body {
 	border-radius: 2rem;
 	padding: 0;
 	margin: 0;
-	transition: width 0.5s;
+	transition: width 0.2s;
 }
 
 #dock li {
@@ -31,7 +31,7 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	transition: width 1s;
+	transition: width 0.3s;
 }
 
 .dockelement {
@@ -40,13 +40,7 @@ body {
 	padding: 1rem;
 	border-radius: 5rem;
 	background: #262626;
-	transition: width 0.5s, height 0.3s, transform 0.5s;
-}
-
-#dock li:hover > .dockelement {
-	position: relative;
-	top: -30%;
-	transform: scale(1.6);
+	transition: width 0.3s;
 }
 
 #dock li:first-child {

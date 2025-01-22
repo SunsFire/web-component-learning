@@ -1,29 +1,40 @@
-const ulist = document.querySelectorAll("#dock > li");
+let ulist = document.querySelector("#dock");
+let elements = document.querySelectorAll("#dock > li");
+const baseWidth = 455;
+const elementCount = elements.length;
+const widthPerElement = baseWidth / elementCount;
 
-ulist.forEach((li) => {
-  li.addEventListener("mousemove", (e) => {
-    let ratio = get_ration(e, li);
-    li.style.width = 5 * ratio + "rem";
-    li.style.transition = "width 0.3s ease";
-  });
-  li.addEventListener("mouseout", () => {
-    li.style.width = "";
-  });
-  li.addEventListener("mousemove", (e) => { });
-});
+function mouse_dock_enter(e) {
+	let mouseX = e.clientX;
+	let totalScaleIncrease = 0;
 
-function get_ration(e, li) {
-  const liwidth = li.clientWidth;
-  const li_left_position = li.getBoundingClientRect();
-  const adjustedLeft = li_left_position.left + window.screenX;
-  const element_mouse_position = e.screenX - adjustedLeft;
-  let position_ratio;
-  if (element_mouse_position / liwidth > 0.5) {
-    position_ratio =
-      (liwidth - 2 * element_mouse_position) / (2 * liwidth) + 0.5;
-    position_ratio = Math.abs(position_ratio);
-  } else {
-    position_ratio = element_mouse_position / liwidth;
-  }
-  return position_ratio;
+	elements.forEach((ele) => {
+		let rect = ele.getBoundingClientRect();
+		let middle = (rect.left + rect.right) / 2;
+		let distance = Math.abs(mouseX - middle);
+		let MaxDistance = 200;
+
+		if (distance < MaxDistance) {
+			const scale = 0.9 + 0.5 * (1 - distance / MaxDistance);
+			const translateY = -15 * (1 - distance / MaxDistance);
+			ele.style.transform = `translateY(${translateY}px)`;
+			ele.querySelector(".dockelement").style.transform = `scale(${scale})`;
+			totalScaleIncrease += scale - 1;
+		} else {
+			ele.style.transform = "none";
+			ele.querySelector(".dockelement").style.transform = "none";
+		}
+	});
+
+	const newWidth = baseWidth + widthPerElement * totalScaleIncrease;
+	ulist.style.width = `${newWidth}px`;
 }
+
+ulist.addEventListener("mousemove", mouse_dock_enter);
+ulist.addEventListener("mouseleave", () => {
+	elements.forEach((ele) => {
+		ele.style.transform = "none";
+		ele.querySelector(".dockelement").style.transform = "none";
+	});
+	ulist.style.width = `${baseWidth}px`;
+});
