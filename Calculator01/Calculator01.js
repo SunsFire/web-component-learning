@@ -39,11 +39,13 @@ theme.addEventListener("click", () => {
 		root.style.setProperty("--text-color", "var(--text-light)");
 		root.style.setProperty("--button-bg", "var(--button-bg-light)");
 		root.style.setProperty("--button-hover-bg", "var(--button-hover-bg-light)");
+		root.style.color = "black";
 	}
 });
 
-const digitButtons = Array.from({ length: 10 }, (_, i) =>
-	document.getElementById(`button${i}`),
+const digitButtons = Array.from(
+	{ length: 10 },
+	(_, i) => document.getElementById(`button${i}`),
 );
 
 const updateDisplay = (content) => {
@@ -101,10 +103,10 @@ buttons.division.onclick =
 	buttons.multiply.onclick =
 	buttons.subtract.onclick =
 	buttons.add.onclick =
-		(event) => {
-			usr_inp += event.target.textContent.trim();
-			updateDisplay(usr_inp);
-		};
+	(event) => {
+		usr_inp += event.target.textContent.trim();
+		updateDisplay(usr_inp);
+	};
 
 buttons.equal.onclick = () => {
 	ques.textContent = usr_inp;
