@@ -1,0 +1,27 @@
+:root {
+  font-size: 14px;
+  --Normalscalefactor: 16px;
+  --largescalefactor: 32px;
+  --smallscalefactor: 8px;
+}
+
+body {
+  margin: 0px;
+  padding: 0;
+}
+
+#dynamicIsland {
+  position: absolute;
+  top: var(--Normalscalefactor);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10%;
+  height: 5%;
+  border: 1px solid black;
+  transition: width 0.5s ease, height 0.5s ease;
+}
+
+/* #dynamicIsland:hover { */
+/*   width: 98%; */
+/*   height: 8%; */
+/* } */
